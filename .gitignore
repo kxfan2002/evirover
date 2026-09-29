@@ -1,0 +1,13 @@
+# Eval outputs.
+results/
+
+# Downloaded by EviLens/scripts/download_images.py (918 MB, hosted separately).
+# Anchored deliberately: a slash in the middle of a pattern makes it relative to
+# this file's directory, so a bare `benchmark/images/` would NOT match here.
+EviLens/benchmark/images/
+
+# Model weights (e.g. SAM3's sam3.pt).
+models/
+
+__pycache__/
+*.pyc

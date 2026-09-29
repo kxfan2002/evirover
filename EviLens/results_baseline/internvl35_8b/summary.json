@@ -1,0 +1,83 @@
+{
+  "categories": {
+    "grounding": {
+      "n": 322,
+      "parse_ok": 186,
+      "parse_fail_rate": 0.4224,
+      "mean_score": 0.0609,
+      "finish_reasons": {
+        "answered": 195,
+        "no_action": 127
+      },
+      "subcategories": {
+        "recognition": {
+          "n": 182,
+          "parse_ok": 126,
+          "parse_fail_rate": 0.3077,
+          "mean_score": 0.0926,
+          "finish_reasons": {
+            "no_action": 54,
+            "answered": 128
+          },
+          "IoU": 0.0926,
+          "R@0.5": 0.033
+        },
+        "localization": {
+          "n": 140,
+          "parse_ok": 60,
+          "parse_fail_rate": 0.5714,
+          "mean_score": 0.0196,
+          "finish_reasons": {
+            "no_action": 73,
+            "answered": 67
+          },
+          "IoU": 0.0196,
+          "R@0.5": 0.0071
+        }
+      }
+    },
+    "spot_diff": {
+      "n": 15,
+      "parse_ok": 8,
+      "parse_fail_rate": 0.4667,
+      "mean_score": 0.0,
+      "finish_reasons": {
+        "answered": 8,
+        "no_action": 7
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f1_micro": 0.0
+    },
+    "segmentation": {
+      "n": 195,
+      "parse_ok": 190,
+      "parse_fail_rate": 0.0256,
+      "mean_score": 0.0807,
+      "finish_reasons": {
+        "answered": 190,
+        "no_action": 5
+      },
+      "gIoU": 0.0807,
+      "cIoU": 0.0811,
+      "iou@0.5": 0.0615
+    },
+    "counting": {
+      "n": 156,
+      "parse_ok": 115,
+      "parse_fail_rate": 0.2628,
+      "mean_score": 0.2051,
+      "finish_reasons": {
+        "answered": 116,
+        "no_action": 40
+      },
+      "accuracy": 0.2051,
+      "mae": 1.1478
+    }
+  },
+  "overall": {
+    "n": 688,
+    "parse_fail_rate": 0.2747
+  }
+}

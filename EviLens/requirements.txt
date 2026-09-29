@@ -1,0 +1,24 @@
+# Core: enough to evaluate a remote OpenAI-compatible endpoint on the
+# grounding / spot_diff / counting families.
+requests>=2.31
+Pillow>=10.0
+numpy>=1.24
+
+# Fetching benchmark/images/ (scripts/download_images.py).
+huggingface_hub>=0.23
+
+# --- optional, per feature -------------------------------------------------
+# Segmentation mask IoU. Needs the facebook/sam3 package plus its sam3.pt
+# checkpoint; point SAM3_CHECKPOINT at the weights (and SAM3_REPO at the clone
+# if sam3 is not pip-installed). Install the torch build matching your CUDA.
+#   torch>=2.4
+#   sam3            # https://github.com/facebookresearch/sam3
+#
+# Serving a local checkpoint with --model-path / MODEL_PATH.
+#   vllm>=0.17      # verified on 0.24.0+cu129 with torch 2.11
+#
+# Token-accurate truncation of browsed pages (otherwise a character cap).
+#   transformers>=4.51
+#
+# image_search: uploads each crop to Aliyun OSS for Serper's Lens endpoint.
+#   oss2>=2.18

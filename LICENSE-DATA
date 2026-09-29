@@ -1,0 +1,33 @@
+Benchmark data license
+======================
+
+Scope: everything under `EviLens/benchmark/` -- the question files
+(`counting.jsonl`, `segmentation.jsonl`, `grounding/*.jsonl`), the
+ground-truth masks under `EviLens/benchmark/masks/`, and the images distributed
+separately and fetched by `EviLens/scripts/download_images.py` into
+`EviLens/benchmark/images/`.
+
+These are released under the Creative Commons
+Attribution-NonCommercial 4.0 International license (CC BY-NC 4.0).
+
+  Summary:    https://creativecommons.org/licenses/by-nc/4.0/
+  Full text:  https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+You may share and adapt the data for non-commercial purposes, with
+attribution.
+
+The code in this repository is licensed separately, under Apache-2.0.
+See LICENSE.
+
+Third-party images
+------------------
+
+A substantial part of `EviLens/benchmark/images/` was collected from public web
+sources, including web-search results. Copyright in those images remains
+with their respective owners; the CC BY-NC 4.0 grant above covers this
+compilation -- the selection, the questions, and the annotations -- not
+the underlying third-party images. They are included for non-commercial
+research and evaluation.
+
+If you hold rights to an image here and want it removed, open an issue
+and it will be taken out of the distribution.
