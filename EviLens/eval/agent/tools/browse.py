@@ -3,7 +3,7 @@
 Mirrors the SFT browse tool end-to-end: fetch strategy (direct request -> free
 Jina -> authenticated Jina), then summarize the cleaned page text with an LLM
 answering the query (SFT did this via an internal API; here it's a configurable
-OpenAI-compatible model, e.g. Novita qwen/qwen3.5-27b, injected as `summarizer`).
+OpenAI-compatible model, injected as `summarizer`).
 
 If no summarizer is configured (or a summarization call fails), browse degrades
 gracefully to returning the raw cleaned page text (truncated).

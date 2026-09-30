@@ -144,17 +144,15 @@ def parse_args():
                         "'serper' (Serper /search, uncapped — does not consume the image "
                         "budget). Lets you A/B the search API's effect on results.")
 
-    p.add_argument("--summary-base-url", default=os.environ.get(
-        "SUMMARY_BASE_URL", "https://"),
+    p.add_argument("--summary-base-url", default=os.environ.get("SUMMARY_BASE_URL", ""),
                    help="[agent] OpenAI-compatible base-url for the browse summarizer")
-    p.add_argument("--summary-model", default=os.environ.get(
-        "SUMMARY_MODEL", "qwen/qwen3.5-27b"),
+    p.add_argument("--summary-model", default=os.environ.get("SUMMARY_MODEL", ""),
                    help="[agent] model used to summarize browsed pages ('' disables -> raw text)")
-    p.add_argument("--summary-key", default=(
-        os.environ.get("SUMMARY_API_KEY")
-        or os.environ.get("NOVITA_API_KEY")
-        or os.environ.get("ANTHROPIC_AUTH_TOKEN", "")),
-                   help="[agent] API key for the browse summarizer endpoint")
+    p.add_argument("--summary-key", default=os.environ.get("SUMMARY_API_KEY", ""),
+                   help="[agent] API key for the browse summarizer endpoint. Read only "
+                        "from SUMMARY_API_KEY: falling back to another provider's "
+                        "variable would send that key to whatever --summary-base-url "
+                        "points at.")
     p.add_argument("--browse-max-tokens", type=int, default=24000,
                    help="[agent] cap fetched page text at this many tokens before "
                         "summarization (token-based when a tokenizer is available)")

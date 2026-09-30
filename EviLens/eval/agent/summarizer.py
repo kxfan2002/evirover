@@ -2,7 +2,7 @@
 
 The SFT `browse` tool summarized each fetched page with an LLM (via an internal
 API) before returning it to the agent. This eval reproduces that behavior against
-a *configurable* OpenAI-compatible model (e.g. Novita `qwen/qwen3.5-27b`) instead
+a *configurable* OpenAI-compatible model instead
 of the internal API, so no internal dependency is needed.
 
 When no endpoint/model is configured, `build_tools` leaves the browse tool without
