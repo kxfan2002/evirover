@@ -1,8 +1,6 @@
 # Reference numbers
 
-Results on EviLens as reported in the paper. Use them to sanity-check a new run:
-if your numbers for one of these models land far from the row below, suspect the
-setup before suspecting the benchmark.
+Results on EviLens as reported in the paper.
 
 ## Protocol
 
