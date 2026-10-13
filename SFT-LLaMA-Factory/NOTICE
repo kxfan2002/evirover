@@ -1,0 +1,31 @@
+This directory is a derivative of LLaMA-Factory.
+
+  Upstream:  https://github.com/hiyouga/LLaMA-Factory
+  Commit:    d1049d65
+  License:   Apache License 2.0 (see LICENSE)
+
+Changes relative to upstream:
+
+  * src/llamafactory/model/model_utils/liger_kernel.py
+      Added the `qwen3_vl` and `qwen3_vl_moe` branches to apply_liger_kernel().
+      Upstream has no branch for these model types, so `enable_liger_kernel:
+      true` was accepted and then silently had no effect.
+
+  * data/dataset_info.json
+      Replaced with a single entry for the EviRover SFT dataset.
+
+  * examples/train_full/sft_qwen3vl_4b.yaml
+      Added: the training configuration for the EviRover SFT stage.
+
+  * scripts/train_sft.sh
+      Added: the launcher.
+
+  * requirements.txt
+      Added: the pinned versions the released checkpoint was trained with.
+
+Only the subset of upstream needed to run this training stage is included.
+`src/` and `pyproject.toml` are upstream's in full (apart from the patch above),
+as is `examples/deepspeed/`. Upstream's `assets/`, `docs/`, `docker/`,
+`requirements/`, `tests/`, `tests_v1/`, its demo datasets and its other example
+configurations are not redistributed here; get them from upstream if you need
+them.

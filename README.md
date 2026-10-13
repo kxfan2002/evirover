@@ -8,10 +8,11 @@
 Code and data for *EviRover: Reinforcing Agentic Perception Beyond a Glance*.
 
 ```
-EviLens/    the benchmark: 688 instances, the scorers, and the agent eval harness
+EviLens/              the benchmark: 688 instances, the scorers, and the agent eval harness
+SFT-LLaMA-Factory/    the supervised fine-tuning stage
 ```
 
-Training code will be added here.
+The RL stage and the training data will be added here.
 
 ---
 

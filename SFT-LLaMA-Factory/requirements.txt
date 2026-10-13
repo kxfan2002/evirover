@@ -1,0 +1,31 @@
+# The exact stack the released SFT checkpoint was trained with (Python 3.11).
+#
+# `pip install -e .` already installs everything declared in pyproject.toml;
+# this file pins the versions that were actually used, plus the three packages
+# the training config needs that are not core dependencies (deepspeed,
+# liger-kernel, flash-attn).
+#
+# torch is listed without its CUDA local version: install the build that matches
+# your driver, e.g.
+#   pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
+
+torch==2.6.0
+torchvision==0.21.0
+transformers==5.8.0
+tokenizers==0.22.2
+accelerate==1.11.0
+datasets==4.0.0
+peft==0.18.1
+trl==0.24.0
+safetensors==0.8.0
+
+deepspeed==0.16.9
+liger-kernel==0.8.1
+flash-attn==2.8.3
+
+numpy==2.2.6
+pillow==12.2.0
+av==14.0.0
+einops==0.8.2
+sentencepiece==0.2.2
+pydantic==2.13.4
