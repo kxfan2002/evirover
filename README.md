@@ -12,7 +12,12 @@ EviLens/              the benchmark: 688 instances, the scorers, and the agent e
 SFT-LLaMA-Factory/    the supervised fine-tuning stage
 ```
 
-The RL stage and the training data will be added here.
+The training data is on HuggingFace:
+[`bunny127/EviRover-SFT-5K`](https://huggingface.co/datasets/bunny127/EviRover-SFT-5K)
+(4,914 agent trajectories) and
+[`bunny127/EviRover-RL-12K`](https://huggingface.co/datasets/bunny127/EviRover-RL-12K)
+(11,966 prompts with verifiable ground truth). The RL stage code will be added
+here.
 
 ---
 
