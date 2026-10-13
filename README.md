@@ -1,7 +1,9 @@
 # EviRover: Reinforcing Agentic Perception Beyond a Glance
 
 [![Model on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Model-bunny127%2FEviRover-yellow)](https://huggingface.co/bunny127/EviRover)
-[![Dataset on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-bunny127%2FEviLens-yellow)](https://huggingface.co/datasets/bunny127/EviLens)
+[![Benchmark on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Benchmark-bunny127%2FEviLens-yellow)](https://huggingface.co/datasets/bunny127/EviLens)
+[![SFT data on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20SFT%20data-bunny127%2FEviRover--SFT--5K-yellow)](https://huggingface.co/datasets/bunny127/EviRover-SFT-5K)
+[![RL data on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20RL%20data-bunny127%2FEviRover--RL--12K-yellow)](https://huggingface.co/datasets/bunny127/EviRover-RL-12K)
 [![Code license](https://img.shields.io/badge/code-Apache--2.0-blue)](LICENSE)
 [![Data license](https://img.shields.io/badge/data-CC%20BY--NC%204.0-lightgrey)](LICENSE-DATA)
 
@@ -10,14 +12,17 @@ Code and data for *EviRover: Reinforcing Agentic Perception Beyond a Glance*.
 ```
 EviLens/              the benchmark: 688 instances, the scorers, and the agent eval harness
 SFT-LLaMA-Factory/    the supervised fine-tuning stage
+RL/                   the reinforcement-learning stage
 ```
 
-The training data is on HuggingFace:
-[`bunny127/EviRover-SFT-5K`](https://huggingface.co/datasets/bunny127/EviRover-SFT-5K)
-(4,914 agent trajectories) and
-[`bunny127/EviRover-RL-12K`](https://huggingface.co/datasets/bunny127/EviRover-RL-12K)
-(11,966 prompts with verifiable ground truth). The RL stage code will be added
-here.
+The model and all three datasets are on HuggingFace:
+
+| | |
+|---|---|
+| [`bunny127/EviRover`](https://huggingface.co/bunny127/EviRover) | the model, 4B |
+| [`bunny127/EviLens`](https://huggingface.co/datasets/bunny127/EviLens) | the benchmark: 688 instances, 674 images |
+| [`bunny127/EviRover-SFT-5K`](https://huggingface.co/datasets/bunny127/EviRover-SFT-5K) | SFT data: 4,914 agent trajectories, 21,385 images |
+| [`bunny127/EviRover-RL-12K`](https://huggingface.co/datasets/bunny127/EviRover-RL-12K) | RL data: 11,966 prompts with verifiable ground truth |
 
 ---
 

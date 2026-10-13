@@ -1,0 +1,49 @@
+This directory is a derivative of three projects, vendored together because the
+released run depends on local modifications to each.
+
+  Vision-DeepResearch   https://github.com/Osilly/Vision-DeepResearch
+                        MIT License -- see LICENSE-Vision-DeepResearch
+                        Provides the async multi-turn agent workflow that
+                        rllm/vision_deepresearch_async_workflow/ is built on.
+
+  rLLM                  https://github.com/agentica-project/rllm
+                        Apache License 2.0 -- see rllm/LICENSE
+                        Vendored at rllm/rllm/. Provides the agent/workflow
+                        trainer, the dataset registry and the reward plumbing.
+
+  verl                  https://github.com/volcengine/verl
+                        Apache License 2.0 -- see rllm/verl/LICENSE and
+                        rllm/verl/Notice.txt
+                        Vendored at rllm/verl/. Provides the PPO/GRPO trainer,
+                        the FSDP workers and the vLLM rollout.
+
+What differs from upstream, by area:
+
+  rllm/verl/verl/trainer/ppo/core_algos.py
+      The `ema_grpo` advantage estimator: the per-group advantage scale is
+      normalized against a per-task exponential moving average, with an
+      optional length channel, a warm-start prior and persisted EMA state.
+
+  rllm/verl/verl/workers/{fsdp_workers,actor/dp_actor}.py
+      rllm/verl/verl/workers/config/actor.py
+      An `override_lr` RPC so a resumed run can be forced onto a new learning
+      rate, and vision-tower freezing.
+
+  rllm/verl/verl/trainer/ppo/ray_trainer.py
+      rllm/rllm/trainer/verl/agent_workflow_trainer.py
+      The learning-rate override call sites, and a guard that stops the run
+      when a step would otherwise contribute a zero gradient.
+
+  rllm/vision_deepresearch_async_workflow/
+      Tool results may carry images, so a crop or a verification view becomes a
+      real multimodal message in the next turn rather than being flattened to
+      text. Adds the ten-tool agent (mm_agent/), the per-task reward wiring,
+      dynamic response budgets, and the termination/masking rules.
+
+  rllm/rllm/rewards/mm_deepresearch_reward.py
+      Task rewards for grounding, spot-the-difference, segmentation (via SAM3)
+      and counting.
+
+Only the parts needed to run this training stage are included. Upstream's
+documentation, tests, recipes, examples, Docker files and unrelated data
+preprocessing are not redistributed here; the dataset registry ships empty.

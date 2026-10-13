@@ -1,0 +1,314 @@
+{
+  "_meta": {
+    "description": "Multimodal agent tool specification: the name, parameters, call format and return format of every tool.",
+    "coordinate_system": "All coordinates are normalized to 0-1000 in xyxy order [x_min, y_min, x_max, y_max]. Points are [x, y].",
+    "image_id_system": "ORIGINAL is the question's own image; IMG_001, IMG_002, ... are numbered in the order the <image> placeholders appear in the record.",
+    "updated": "2026-06-24"
+  },
+  "tools": [
+    {
+      "name": "text_search",
+      "description": "Text web search; returns page titles, snippets and links.",
+      "parameters": {
+        "query": {
+          "type": "string",
+          "required": true,
+          "description": "The search query."
+        },
+        "top_k": {
+          "type": "integer",
+          "required": false,
+          "default": 6,
+          "description": "How many results to return."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"text_search\", \"arguments\": {\"query\": \"...\", \"top_k\": 5}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- text search result for [QUERY] ---\n...\n--- end text search result ---\n</tool_response>",
+        "fields": "A numbered list; each entry is [title](URL) followed by a snippet.",
+        "has_image": false
+      }
+    },
+    {
+      "name": "text_search_image",
+      "description": "Text-to-image search; finds web images by keyword and returns image references.",
+      "parameters": {
+        "query": {
+          "type": "string",
+          "required": true,
+          "description": "The image search query."
+        },
+        "top_k": {
+          "type": "integer",
+          "required": false,
+          "default": 3,
+          "description": "How many images to return (1-10). Each image costs 1000+ context tokens, so ask only for what is needed."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"text_search_image\", \"arguments\": {\"query\": \"...\", \"top_k\": 3}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- image search result for [QUERY] ---\nIMG_NNN: <image>\n  title: ...\n  url: ...\n...\n--- end image search result ---\n</tool_response>",
+        "fields_per_image": [
+          "IMG_NNN: <image>",
+          "title",
+          "url"
+        ],
+        "has_image": true,
+        "note": "Each image is assigned an IMG_NNN id, numbered in the record's global <image> order."
+      }
+    },
+    {
+      "name": "image_search",
+      "description": "Reverse image search; uploads the given image (optionally cropped to a bbox) and returns visually similar images with an evidence summary.",
+      "parameters": {
+        "image_id": {
+          "type": "string",
+          "required": true,
+          "description": "The image id, usually ORIGINAL."
+        },
+        "image_path": {
+          "type": "string",
+          "required": false,
+          "description": "A local image path (optional when image_id is given)."
+        },
+        "boxes": {
+          "type": "array[4]",
+          "required": false,
+          "description": "A bbox normalized to 0-1000; the image is cropped to it before searching."
+        },
+        "top_k": {
+          "type": "integer",
+          "required": false,
+          "default": 3,
+          "description": "How many results to return."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"image_search\", \"arguments\": {\"image_id\": \"ORIGINAL\", \"boxes\": [564, 228, 915, 386]}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- image-to-image search results ---\nnum_results: N\n[1] ... evidence ...\n[2] ...\n--- end image-to-image search results ---\n</tool_response>",
+        "fields": [
+          "num_results: the number of results.",
+          "[N] each result carries a URL and an evidence summary."
+        ],
+        "has_image": false,
+        "note": "The result images are processed internally by a VLM; what comes back is a textual evidence summary with no <image> tag."
+      }
+    },
+    {
+      "name": "browse",
+      "description": "Fetches a web page and extracts the information relevant to the query.",
+      "parameters": {
+        "url": {
+          "type": "string",
+          "required": true,
+          "description": "The page URL."
+        },
+        "query": {
+          "type": "string",
+          "required": true,
+          "description": "What to extract from the page."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"browse\", \"arguments\": {\"url\": \"https://...\", \"query\": \"...\"}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- browse result ---\nurl: ...\nquery: ...\nfetch_method: ...\nsummary:\n...\n--- end browse result ---\n</tool_response>",
+        "fields": [
+          "url",
+          "query",
+          "fetch_method: direct|...",
+          "summary: a summary of the extracted information."
+        ],
+        "has_image": false
+      }
+    },
+    {
+      "name": "crop",
+      "description": "Crops a region out of an image and upscales it, to inspect detail.",
+      "parameters": {
+        "image_id": {
+          "type": "string",
+          "required": true,
+          "description": "The image id, usually ORIGINAL."
+        },
+        "boxes": {
+          "type": "array[4]",
+          "required": true,
+          "description": "A bbox normalized to 0-1000, [x_min, y_min, x_max, y_max]."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"crop\", \"arguments\": {\"image_id\": \"ORIGINAL\", \"boxes\": [270, 30, 360, 150]}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- crop result ---\nIMG_NNN: <image>\nsource_image_id: ORIGINAL\n--- end crop result ---\n</tool_response>",
+        "fields": [
+          "IMG_NNN: <image>",
+          "source_image_id"
+        ],
+        "has_image": true
+      }
+    },
+    {
+      "name": "verify",
+      "description": "Draws rectangles on the original image to verify a bbox. Can be called repeatedly to refine.",
+      "parameters": {
+        "image_id": {
+          "type": "string",
+          "required": true,
+          "description": "The image id, usually ORIGINAL."
+        },
+        "boxes": {
+          "type": "array[4]",
+          "required": true,
+          "description": "A bbox normalized to 0-1000, [x_min, y_min, x_max, y_max]."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"verify\", \"arguments\": {\"image_id\": \"ORIGINAL\", \"boxes\": [390, 150, 485, 500]}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- verify result ---\nIMG_NNN: <image>\nsource_image_id: ORIGINAL\n--- end verify result ---\n</tool_response>",
+        "fields": [
+          "IMG_NNN: <image>",
+          "source_image_id"
+        ],
+        "has_image": true
+      }
+    },
+    {
+      "name": "verify_part",
+      "description": "Crops the bbox region for a final check. Can be called repeatedly to refine.",
+      "parameters": {
+        "image_id": {
+          "type": "string",
+          "required": true,
+          "description": "The image id, usually ORIGINAL."
+        },
+        "boxes": {
+          "type": "array[4]",
+          "required": true,
+          "description": "A bbox normalized to 0-1000, [x_min, y_min, x_max, y_max]."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"verify_part\", \"arguments\": {\"image_id\": \"ORIGINAL\", \"boxes\": [380, 600, 450, 950]}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- verify_part result ---\nIMG_NNN: <image>\nsource_image_id: ORIGINAL\n--- end verify_part result ---\n</tool_response>",
+        "fields": [
+          "IMG_NNN: <image>",
+          "source_image_id"
+        ],
+        "has_image": true
+      }
+    },
+    {
+      "name": "verify_mask",
+      "description": "Runs a local SAM3 with the proposed bbox plus optional positive/negative points, and returns an overlay visualisation of the resulting mask.",
+      "parameters": {
+        "image_id": {
+          "type": "string",
+          "required": true,
+          "description": "The image id, usually ORIGINAL."
+        },
+        "boxes": {
+          "type": "array[4]",
+          "required": true,
+          "description": "A bbox normalized to 0-1000, [x_min, y_min, x_max, y_max]."
+        },
+        "positive_points": {
+          "type": "array[N][2]",
+          "required": false,
+          "description": "Positive prompt points [[x,y], ...], normalized to 0-1000."
+        },
+        "negative_points": {
+          "type": "array[N][2]",
+          "required": false,
+          "description": "Negative prompt points [[x,y], ...], normalized to 0-1000."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"verify_mask\", \"arguments\": {\"image_id\": \"ORIGINAL\", \"boxes\": [335, 425, 465, 950], \"positive_points\": [[400,480],[400,650],[400,850]], \"negative_points\": [[300,480],[510,650],[300,850]]}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- verify_mask result ---\nIMG_NNN: <image>\nsource_image_id: ORIGINAL\n--- end verify_mask result ---\n</tool_response>",
+        "fields": [
+          "IMG_NNN: <image>",
+          "source_image_id"
+        ],
+        "has_image": true,
+        "note": "The returned image is a cyan overlay visualisation of the SAM3 mask."
+      }
+    },
+    {
+      "name": "compare_lr",
+      "description": "Find-the-difference only: given a bbox on the left panel, returns that region and the same region of the right panel stitched side by side (separated by a magenta line) at identical size, for direct pixel-by-pixel comparison.",
+      "parameters": {
+        "image_id": {
+          "type": "string",
+          "required": true,
+          "description": "The image id, usually ORIGINAL."
+        },
+        "boxes": {
+          "type": "array[4]",
+          "required": true,
+          "description": "A bbox on the left panel, normalized to 0-1000, [x_min, y_min, x_max, y_max]; x_max must be <= 500."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"compare_lr\", \"arguments\": {\"image_id\": \"ORIGINAL\", \"boxes\": [120, 200, 260, 360]}}\n</tool_call>",
+      "response_format": {
+        "wrapper": "<tool_response>\n--- compare_lr result ---\nIMG_NNN: <image>\nsource_image_id: ORIGINAL\nleft_box: [...]\nright_box: [...]\nlayout: left region | magenta divider | right region (same size)\n--- end compare_lr result ---\n</tool_response>",
+        "fields": [
+          "IMG_NNN: <image>",
+          "source_image_id",
+          "left_box",
+          "right_box",
+          "layout"
+        ],
+        "has_image": true
+      }
+    },
+    {
+      "name": "python",
+      "description": "Executes Python code for arithmetic, coordinate transforms or image analysis.",
+      "parameters": {
+        "code": {
+          "type": "string",
+          "required": true,
+          "description": "The Python code to execute."
+        }
+      },
+      "call_format": "<tool_call>\n{\"name\": \"python\", \"arguments\": {\"code\": \"import numpy as np\\n...\"}}\n</tool_call>",
+      "response_format": {
+        "wrapper_text_only": "<tool_response>\n--- python result ---\n{print output}\n--- end python result ---\n</tool_response>",
+        "wrapper_with_image": "<tool_response>\n--- python result ---\n{print output, or (no output)}\nIMG_NNN: <image>\n--- end python result ---\n</tool_response>",
+        "fields": [
+          "The text written by print().",
+          "If _result_image is set, it is assigned an additional IMG_NNN."
+        ],
+        "has_image": "conditional -- only when the code sets the _result_image variable.",
+        "pre_injected_variables": {
+          "original_image": "PIL.Image -- the question's own image.",
+          "IMG_001..N": "PIL.Image -- images returned by earlier tool calls.",
+          "num_images": "int -- how many IMG images already exist."
+        },
+        "available_libraries": [
+          "numpy (as np)",
+          "PIL.Image",
+          "PIL.ImageDraw",
+          "math",
+          "json",
+          "cv2",
+          "scipy",
+          "copy"
+        ],
+        "constraints": "There must be output (print or _result_image); code that produces none is treated as invalid."
+      }
+    }
+  ],
+  "message_format": {
+    "assistant_turn": {
+      "with_tool_call": "<think>\n{reasoning}\n</think>\n<tool_call>\n{tool_call_json}\n</tool_call>",
+      "with_answer_grounding": "<think>\n{reasoning}\n</think>\n<answer>\n[x_min, y_min, x_max, y_max]\n</answer>",
+      "with_answer_segmentation": "<think>\n{reasoning}\n</think>\n<answer>\n{\"boxes\":[x_min,y_min,x_max,y_max],\"positive_points\":[[x,y],[x,y],[x,y]],\"negative_points\":[[x,y],[x,y],[x,y]]}\n</answer>",
+      "rules": [
+        "Each turn is either a tool_call or an answer, never both.",
+        "When think is empty the <think> tag may be omitted and <tool_call> emitted directly.",
+        "Only one tool may be called per turn."
+      ]
+    },
+    "user_turn_tool_response": "<tool_response>\n--- {tool_name} result ---\n{fields}\n--- end {tool_name} result ---\n</tool_response>"
+  }
+}

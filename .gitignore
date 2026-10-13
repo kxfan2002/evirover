@@ -6,8 +6,13 @@ results/
 # this file's directory, so a bare `benchmark/images/` would NOT match here.
 EviLens/benchmark/images/
 
-# Model weights (e.g. SAM3's sam3.pt).
-models/
+# Model weights (e.g. SAM3's sam3.pt). Anchored: a bare `models/` would also
+# match vendored source packages such as RL/rllm/verl/verl/models/.
+/models/
 
 __pycache__/
 *.pyc
+
+# Credentials. RL/.env.example is the template; the filled-in copy never ships.
+.env
+RL/rllm/.env
