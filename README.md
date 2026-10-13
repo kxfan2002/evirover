@@ -1,5 +1,6 @@
 # EviRover: Reinforcing Agentic Perception Beyond a Glance
 
+[![Model on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Model-bunny127%2FEviRover-yellow)](https://huggingface.co/bunny127/EviRover)
 [![Dataset on HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-bunny127%2FEviLens-yellow)](https://huggingface.co/datasets/bunny127/EviLens)
 [![Code license](https://img.shields.io/badge/code-Apache--2.0-blue)](LICENSE)
 [![Data license](https://img.shields.io/badge/data-CC%20BY--NC%204.0-lightgrey)](LICENSE-DATA)
@@ -192,4 +193,10 @@ images came from public web sources and remain under their owners' copyright.
 ## Citation
 
 ```bibtex
+@article{fan2026evirover,
+  title={EviRover: Reinforcing Agentic Perception Beyond a Glance},
+  author={Fan, Kaixuan and Feng, Kaituo and Peng, Tianshuo and Jiang, Yilei and Zhang, Manyuan and Wang, Junke and Yue, Xiangyu},
+  journal={arXiv preprint arXiv:2609.40230},
+  year={2026}
+}
 ```
